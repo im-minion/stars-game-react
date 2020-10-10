@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import PlayNumber from './PlayNumber';
 import PlayAgain from './PlayAgain'
@@ -9,7 +9,9 @@ function App() {
   const [stars, setStars] = useState(utils.random(1, 9));
   const [availableNums, setAvailabelNums] = useState(utils.range(1, 9));
   const [candidateNums, setCanditateNums] = useState([]);
+  const [secondsLeft, setSecondsLeft] = useState(10);
 
+  // useEffect()
   const candidatesAreWrong = utils.sum(candidateNums) > stars;
 
   const gameIsDone = availableNums.length === 0;
@@ -68,7 +70,7 @@ function App() {
           )}
         </div>
       </div>
-      <div className="timer">Time Remaining: 10</div>
+          <div className="timer">Time Remaining: {secondsLeft}</div>
     </div>
   );
 }
