@@ -5,7 +5,7 @@ import PlayAgain from './PlayAgain'
 import { utils } from './SharedUtils';
 import { StarDisplay } from './StarsDisplay';
 
-function App() {
+function Game(props) {
   const [stars, setStars] = useState(utils.random(1, 9));
   const [availableNums, setAvailabelNums] = useState(utils.range(1, 9));
   const [candidateNums, setCanditateNums] = useState([]);
@@ -25,12 +25,13 @@ function App() {
 
   const gameStatus = availableNums.length === 0 ? 'won' : secondsLeft === 0 ? 'lost' : 'active'
 
-  const resetGame = () => {
-    setStars(utils.random(1, 9));
-    setAvailabelNums(utils.range(1, 9));
-    setCanditateNums([]);
-    setSecondsLeft(10);
-  };
+  // Alternate way to reset is unmount and mount the cpomplete game again!! Check the onClick used in <PlayAgain  ..../>
+  // const resetGame = () => {
+  //   setStars(utils.random(1, 9));
+  //   setAvailabelNums(utils.range(1, 9));
+  //   setCanditateNums([]);
+  //   setSecondsLeft(10);
+  // };
 
   const numberStatus = (num) => {
     if (!availableNums.includes(num)) {
@@ -70,7 +71,7 @@ function App() {
       <div className="body">
         <div className="left">
           {gameStatus !== 'active' ?
-            (<PlayAgain onClick={resetGame} gameStatus={gameStatus} />) : (<StarDisplay count={stars} />)}
+            (<PlayAgain onClick={props.startNewGame} gameStatus={gameStatus} />) : (<StarDisplay count={stars} />)}
         </div>
         <div className="right">
           {utils.range(1, 9).map(number =>
@@ -86,4 +87,14 @@ function App() {
     </div>
   );
 }
+
+
+export function App() {
+  const [gameId, setGameId] = useState(1);
+  // Unmount and then mount the new game
+  return (
+    <Game key={gameId} startNewGame={() => setGameId(gameId + 1)}/>
+  );
+}
+
 export default App;
