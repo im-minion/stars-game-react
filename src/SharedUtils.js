@@ -4,7 +4,7 @@ const colors = {
     used: 'lightgreen',
     wrong: 'lightcoral',
     candidate: 'deepskyblue',
-};
+  };
 
 // Math science
 const utils = {
