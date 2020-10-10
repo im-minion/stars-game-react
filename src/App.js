@@ -11,16 +11,27 @@ function App() {
   const [candidateNums, setCanditateNums] = useState([]);
   const [secondsLeft, setSecondsLeft] = useState(10);
 
-  // useEffect()
+  useEffect(() => {
+    if (secondsLeft > 0 && availableNums.length > 0) {
+      console.log('Rendered....');
+      const timerId = setTimeout(() => {
+        setSecondsLeft(secondsLeft - 1);
+      }, 1000);
+      return () => clearTimeout(timerId);
+    }
+  });
+
   const candidatesAreWrong = utils.sum(candidateNums) > stars;
 
-  const gameIsDone = availableNums.length === 0;
+  const gameStatus = availableNums.length === 0 ? 'won' : secondsLeft === 0 ? 'lost' : 'active'
 
   const resetGame = () => {
     setStars(utils.random(1, 9));
     setAvailabelNums(utils.range(1, 9));
     setCanditateNums([]);
+    setSecondsLeft(10);
   };
+
   const numberStatus = (num) => {
     if (!availableNums.includes(num)) {
       return 'used';
@@ -33,7 +44,7 @@ function App() {
 
   const onNumberClick = (number, currStatus) => {
     // currStatus => newStatus
-    if (currStatus === 'used') {
+    if (gameStatus !== 'active' || currStatus === 'used') {
       return;
     }
 
@@ -58,7 +69,8 @@ function App() {
     </div>
       <div className="body">
         <div className="left">
-          {gameIsDone ? (<PlayAgain onClick={resetGame} />) : (<StarDisplay count={stars} />)}
+          {gameStatus !== 'active' ?
+            (<PlayAgain onClick={resetGame} gameStatus={gameStatus} />) : (<StarDisplay count={stars} />)}
         </div>
         <div className="right">
           {utils.range(1, 9).map(number =>
@@ -70,7 +82,7 @@ function App() {
           )}
         </div>
       </div>
-          <div className="timer">Time Remaining: {secondsLeft}</div>
+      <div className="timer">Time Remaining: {secondsLeft}</div>
     </div>
   );
 }
